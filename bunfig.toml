@@ -1,0 +1,13 @@
+[install]
+auto = "disable"
+registry = "https://registry.npmjs.org"
+
+[build]
+sourcemap = "external"
+minify = false
+
+[run]
+hot = true
+
+[dev]
+port = 3000

@@ -1,0 +1,23 @@
+{
+  "name": "lux-sunglasses-modular-ui",
+  "version": "1.0.0",
+  "description": "A modular UI framework-lite for Lux Sunglasses store using Bun, Hono, EJS, and vanilla JS",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "bun run server.js",
+    "dev": "bun --hot run server.js",
+    "build": "bun build --target=node server.js --outdir dist",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "hono": "^4.0.0",
+    "ejs": "^3.1.9"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "keywords": ["modular-ui", "component-system", "bun", "hono", "ejs", "javascript"],
+  "author": "Your Name",
+  "license": "MIT"
+}

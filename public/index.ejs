@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lux Sunglasses - Luxury Eyewear</title>
+  <meta name="description" content="Experience luxury sunglasses with interactive Canvas 2D lens reflections and smooth animations.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/main.css?v=<%= Date.now() %>">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <h1 class="nav-brand">LUX</h1>
+      <div class="nav-cart" id="navCart">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="hero" data-component="Hero" data-props='{"title":"Luxury Sunglasses","subtitle":"Experience the difference","ctaText":"Shop Now"}'>
+    <div class="hero-canvas-container"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">Luxury Sunglasses</h1>
+      <p class="hero-subtitle">Experience the difference</p>
+      <button class="hero-cta">Shop Now</button>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section class="products-section" id="products">
+    <div class="container">
+      <h2 class="section-title">Our Collection</h2>
+      <div class="products-grid" id="productsGrid" data-component="ProductGrid" data-props='<%= JSON.stringify({ products: products }) %>'>
+        <!-- Product cards will be rendered by ProductGrid component -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Cart Modal -->
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-overlay"></div>
+    <div class="cart-content">
+      <div class="cart-header">
+        <h2>Shopping Cart</h2>
+        <button class="cart-close" id="cartClose">&times;</button>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <p class="cart-empty">Your cart is empty</p>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total: $<span id="cartTotal">0.00</span></span>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3/lib/anime.min.js"></script>
+
+  <!-- Core utilities -->
+  <script type="module">
+    import { componentRegistry } from '/js/utils/ComponentRegistry.js';
+    import { hydrator } from '/js/utils/ProgressiveHydrator.js';
+    import { eventBus } from '/js/utils/EventBus.js';
+    import { cartStore } from '/js/utils/CartStore.js';
+    import { smoothScroll, animationManager } from '/js/utils/scroll.js';
+
+    // Register components
+    import Hero from '/js/components/Hero.js';
+    import ProductCard from '/js/components/ProductCard.js';
+    import CartModal from '/js/components/CartModal.js';
+    import ProductGrid from '/js/components/ProductGrid.js';
+
+    componentRegistry.register('Hero', Hero);
+    componentRegistry.register('ProductCard', ProductCard);
+    componentRegistry.register('CartModal', CartModal);
+    componentRegistry.register('ProductGrid', ProductGrid);
+
+    // Initialize progressive hydration
+    hydrator.init();
+
+    // Initialize smooth scroll and animations
+    window.addEventListener('load', () => {
+      // Initialize cart UI
+      updateCartUI();
+
+      // Animate hero content
+      const heroContent = document.querySelector('.hero-content');
+      if (heroContent) {
+        animationManager.fadeIn(heroContent, 1000);
+        animationManager.slideIn(heroContent.querySelector('.hero-title'), 'up', 30, 1000, 200);
+        animationManager.slideIn(heroContent.querySelector('.hero-subtitle'), 'up', 30, 1000, 400);
+        animationManager.slideIn(heroContent.querySelector('.hero-cta'), 'up', 30, 1000, 600);
+      }
+
+      // Animate product cards on scroll
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            animationManager.slideIn(entry.target, 'up', 50, 800, index * 100);
+            observer.unobserve(entry.target);
+          }
+        });
+      });
+
+      document.querySelectorAll('.product-card').forEach(card => {
+        observer.observe(card);
+      });
+
+      // Cart modal functionality
+      // Initialize CartModal
+      const cartModalElement = document.getElementById('cartModal');
+      const cartModal = new CartModal();
+      cartModal.mount(document.body); // Mount to body or a specific container
+      
+      const navCartIcon = document.getElementById('navCart');
+      if (navCartIcon) {
+        navCartIcon.addEventListener('click', () => {
+          cartModal.open();
+        });
+      }
+
+      // Initialize ProductGrid
+      const productsGridElement = document.getElementById('productsGrid');
+      const productGridProps = productsGridElement.dataset.props ? JSON.parse(productsGridElement.dataset.props) : {};
+      const productGrid = new ProductGrid(productGridProps);
+      productGrid.hydrate(productsGridElement);
+
+      // Hydrate components progressively
+      hydrator.hydrateAll();
+    });
+
+    // Update cart UI
+    function updateCartUI() {
+      const cartCount = document.getElementById('cartCount');
+      const cartItems = document.getElementById('cartItems');
+      const cartTotal = document.getElementById('cartTotal');
+
+      const cart = cartStore.getSummary();
+
+      cartCount.textContent = cart.itemCount;
+      cartTotal.textContent = cart.total.toFixed(2);
+
+      if (cart.items.length === 0) {
+        cartItems.innerHTML = '<p class="cart-empty">Your cart is empty</p>';
+      } else {
+        cartItems.innerHTML = cart.items.map(item => `
+          <div class="cart-item" data-id="${item.productId}">
+            <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+            <div class="cart-item-info">
+              <h4>${item.name}</h4>
+              <p>$${item.price.toFixed(2)} × ${item.quantity}</p>
+            </div>
+            <button class="cart-item-remove" data-id="${item.productId}">×</button>
+          </div>
+        `).join('');
+
+        // Add remove functionality
+        cartItems.querySelectorAll('.cart-item-remove').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const productId = parseInt(e.target.dataset.id);
+            cartStore.removeItem(productId);
+          });
+        });
+      }
+    }
+
+    // Listen for cart changes
+    eventBus.on('cart:changed', updateCartUI);
+  </script>
+</body>
+</html>
