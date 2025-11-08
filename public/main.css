@@ -501,6 +501,238 @@ body {
   }
 }
 
+/* Lux Components Catalog Page
+   Provides a polished layout for /components using existing Lux aesthetic.
+-------------------------------------------------------------- */
+
+.components-page {
+  padding-top: 90px; /* account for fixed navbar */
+  padding-bottom: 80px;
+  background:
+    radial-gradient(circle at top, #ffffff 0, #f9fafb 38%, #eef2ff 100%);
+  min-height: 100vh;
+  color: #0f172a;
+}
+
+/* Hero */
+
+.components-hero {
+  padding: 40px 0 18px;
+  border-bottom: 1px solid rgba(148, 163, 253, 0.25);
+  background:
+    radial-gradient(circle at top left, #ffffff 0, #f4f4ff 32%, #eef2ff 100%);
+}
+
+.components-hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.components-title {
+  font-size: 2.35rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+}
+
+.components-subtitle {
+  max-width: 640px;
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+/* Sections */
+
+.components-section {
+  max-width: 1200px;
+  margin: 28px auto 0;
+  padding: 22px 2rem 26px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(148, 163, 253, 0.28);
+  box-shadow:
+    0 18px 55px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+  backdrop-filter: blur(12px);
+}
+
+.components-section-header h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 2px;
+}
+
+.components-section-header p {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Demo + Code layout */
+
+.components-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(260px, 1.4fr);
+  gap: 22px;
+  margin-top: 14px;
+  align-items: flex-start;
+}
+
+.components-demo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.components-code {
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: #e5e7eb;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at top left, rgba(79, 70, 229, 0.32), transparent),
+    #020817;
+  border: 1px solid rgba(148, 163, 253, 0.5);
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+/* Lux Buttons */
+
+.lux-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.4rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid #111827;
+  background: #111827;
+  color: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.lux-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.35);
+  background: #020817;
+  border-color: #020817;
+}
+
+/* Variants via data-props */
+
+button[data-props*='"variant":"outline"'],
+.lux-btn[data-variant="outline"] {
+  background: transparent;
+  color: #111827;
+  border-color: rgba(17, 24, 39, 0.4);
+  box-shadow: none;
+}
+
+button[data-props*='"variant":"outline"']:hover,
+.lux-btn[data-variant="outline"]:hover {
+  background: rgba(17, 24, 39, 0.04);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.16);
+}
+
+button[data-props*='"variant":"ghost"'],
+.lux-btn[data-variant="ghost"] {
+  background: transparent;
+  border-color: transparent;
+  color: #6b7280;
+}
+
+button[data-props*='"variant":"ghost"']:hover,
+.lux-btn[data-variant="ghost"]:hover {
+  background: rgba(148, 163, 253, 0.08);
+  color: #111827;
+}
+
+/* Lux Card demo */
+
+.lux-card {
+  min-width: 260px;
+  max-width: 340px;
+  padding: 16px 16px 14px;
+  border-radius: 18px;
+  background: linear-gradient(to bottom, #ffffff, #f9fafb);
+  border: 1px solid rgba(148, 163, 253, 0.45);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+  position: relative;
+}
+
+.lux-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lux-card-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  background: rgba(79, 70, 229, 0.08);
+  color: #4f46e5;
+}
+
+.lux-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #111827;
+}
+
+.lux-card-body {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.lux-btn.lux-btn-sm,
+.lux-card .lux-btn {
+  padding: 0.4rem 1rem;
+  font-size: 0.7rem;
+}
+
+/* Lux Toast demo root */
+
+#lux-toast-root {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 2500;
+  pointer-events: none;
+}
+
+/* Components page responsive */
+
+@media (max-width: 900px) {
+  .components-page {
+    padding-top: 78px;
+  }
+
+  .components-hero-inner,
+  .components-section {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .components-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
 /* Loading states */
 .loading {
   opacity: 0.6;

@@ -75,11 +75,18 @@ const app = new Hono();
 //  - /js/utils/ComponentRegistry.js   -> public/js/utils/ComponentRegistry.js
 //  - /js/components/Hero.js           -> public/js/components/Hero.js
 //  - /images/...                      -> public/images/...
-app.use('/*', serveStatic({ root: './public' }));
+app.use('/js/*', serveStatic({ root: './public', cacheControl: 'no-store' })); // Explicitly disable caching for JS
+app.use('/*', serveStatic({ root: './public' })); // General static files
 
 // API Routes
 app.get('/api/products', async (c) => {
   return c.json(products);
+});
+
+ // Components gallery route - renders the visual Lux components catalog
+app.get('/components', async (c) => {
+  const html = await renderTemplate('components', { products });
+  return c.html(html);
 });
 
 app.get('/api/products/:id', async (c) => {
