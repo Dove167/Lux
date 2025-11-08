@@ -1,6 +1,7 @@
-// ProductCard component with Canvas 2D lens reflection
+ // ProductCard component with Canvas 2D lens reflection + clean-luxury animations
 import { BaseComponent } from '../utils/BaseComponent.js';
 import { eventBus } from '../utils/EventBus.js';
+import { animationManager } from '../utils/scroll.js';
 
 export default class ProductCard extends BaseComponent {
   constructor(props = {}) {
@@ -22,6 +23,7 @@ export default class ProductCard extends BaseComponent {
   onMounted() {
     this.setupCanvas();
     this.setupEventListeners();
+    this.animateEntrance();
   }
 
   onUnmounted() {
@@ -62,14 +64,18 @@ export default class ProductCard extends BaseComponent {
       });
     }
 
-    // Card hover effects
-    card.addEventListener('mouseenter', () => {
-      card.classList.add('hovered');
-    });
+    // Card hover effects (CSS base + JS enhanced via AnimationManager)
+    if (animationManager && typeof animationManager.hoverEffect === 'function') {
+      animationManager.hoverEffect(card, 1.03, 220);
+    } else {
+      card.addEventListener('mouseenter', () => {
+        card.classList.add('hovered');
+      });
 
-    card.addEventListener('mouseleave', () => {
-      card.classList.remove('hovered');
-    });
+      card.addEventListener('mouseleave', () => {
+        card.classList.remove('hovered');
+      });
+    }
   }
 
   addToCart() {
@@ -81,16 +87,29 @@ export default class ProductCard extends BaseComponent {
       quantity: 1
     });
 
-    // Visual feedback
+    // Visual feedback (subtle pulse via AnimationManager)
     const btn = this.element.querySelector('.add-to-cart-btn');
-    if (btn) {
-      btn.textContent = 'Added!';
-      btn.classList.add('added');
-      setTimeout(() => {
-        btn.textContent = 'Add to Cart';
-        btn.classList.remove('added');
-      }, 2000);
+    if (!btn) return;
+
+    if (animationManager && typeof animationManager.pulse === 'function') {
+      animationManager.pulse(btn, 1.04, 200);
     }
+
+    btn.classList.add('added');
+    btn.textContent = 'Added!';
+    setTimeout(() => {
+      btn.classList.remove('added');
+      btn.textContent = 'Add to Cart';
+    }, 2000);
+  }
+
+  // Entrance animation for the card
+  animateEntrance() {
+    const card = this.element;
+    if (!card || !animationManager || typeof animationManager.slideIn !== 'function') return;
+
+    // Start slightly offset; AnimationManager handles opacity/transform
+    animationManager.slideIn(card, 'up', 24, 700, 0);
   }
 
   animate() {

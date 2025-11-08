@@ -78,7 +78,7 @@ body {
   font-weight: 600;
 }
 
-/* Hero Section */
+/* Hero Section - clean luxury */
 .hero-section {
   height: 100vh;
   position: relative;
@@ -86,7 +86,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: radial-gradient(circle at top left, #ffffff 0%, #f5f5f5 18%, #e5e5e5 40%, #111111 100%);
 }
 
 .hero-canvas-container {
@@ -107,44 +107,46 @@ body {
   position: relative;
   z-index: 10;
   text-align: center;
-  color: white;
-  max-width: 600px;
+  color: #111111;
+  max-width: 640px;
   padding: 0 2rem;
 }
 
 .hero-title {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 700;
-  margin-bottom: 1rem;
-  letter-spacing: -0.02em;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: clamp(2.6rem, 5vw, 3.6rem);
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  opacity: 0.9;
-  font-weight: 400;
+  font-size: 1.05rem;
+  margin-bottom: 1.8rem;
+  opacity: 0.8;
+  font-weight: 300;
 }
 
 .hero-cta {
-  background: white;
-  color: #1a1a1a;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  background: #111111;
+  color: #f5f5f5;
+  border: 1px solid rgba(0, 0, 0, 0.9);
+  padding: 0.85rem 2.4rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 220ms ease-out, border-color 220ms ease-out, transform 220ms ease-out, box-shadow 220ms ease-out, color 220ms ease-out;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.14em;
 }
 
 .hero-cta:hover {
-  background: rgba(255, 255, 255, 0.9);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  background: #111111;
+  color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
 }
 
 /* Products Section */
@@ -170,24 +172,26 @@ body {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.75rem;
 }
 
-/* Product Cards */
+/* Product Cards - subtle elevated glass */
 .product-card {
-  background: white;
-  border-radius: 16px;
+  background: #ffffff;
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-  transition: all 0.3s ease;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: box-shadow 220ms ease-out, transform 220ms ease-out, border-color 220ms ease-out, background 220ms ease-out;
   cursor: pointer;
   position: relative;
 }
 
 .product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 26px 72px rgba(0, 0, 0, 0.18);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 
 .product-image-container {
@@ -245,27 +249,31 @@ body {
 }
 
 .add-to-cart-btn {
-  background: white;
-  color: #1a1a1a;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
-  font-weight: 600;
-  font-size: 0.9rem;
+  background: rgba(0, 0, 0, 0.86);
+  color: #f5f5f5;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.65rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.78rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 200ms ease-out, transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out, color 200ms ease-out;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.12em;
 }
 
 .add-to-cart-btn:hover {
-  background: #f0f0f0;
-  transform: scale(1.05);
+  background: #111111;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);
+  transform: translateY(-1px);
 }
 
 .add-to-cart-btn.added {
-  background: #4CAF50;
-  color: white;
+  background: rgba(22, 163, 74, 0.14);
+  color: #15803d;
+  border-color: rgba(22, 163, 74, 0.5);
 }
 
 .product-info {
@@ -497,6 +505,16 @@ body {
 .loading {
   opacity: 0.6;
   pointer-events: none;
+}
+
+/* Ensure elements are visible if JS/CDN disabled */
+.hero-content,
+.hero-title,
+.hero-subtitle,
+.hero-cta,
+.product-card {
+  opacity: 1;
+  transform: none;
 }
 
 /* Focus states for accessibility */

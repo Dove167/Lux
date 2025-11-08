@@ -32,12 +32,22 @@ export default class ProductGrid extends BaseComponent {
   }
 
   async loadProducts() {
+    // If products were provided via data-props (SSR), use them directly.
+    if (Array.isArray(this.props.products) && this.props.products.length > 0) {
+      this.renderProducts();
+      return;
+    }
+
+    // Fallback: fetch from API (progressive enhancement)
     this.setState({ loading: true });
 
     try {
       const response = await fetch('/api/products');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
       const products = await response.json();
-      this.props.products = products;
+      this.props.products = Array.isArray(products) ? products : [];
       this.renderProducts();
     } catch (error) {
       console.error('Failed to load products:', error);
@@ -48,29 +58,33 @@ export default class ProductGrid extends BaseComponent {
   }
 
   renderProducts() {
-    const grid = this.element.querySelector('.products-grid');
-    if (!grid) return;
+    // Safety: ensure we have an array
+    const products = Array.isArray(this.props.products) ? this.props.products : [];
+    if (!products.length) {
+      return;
+    }
 
-    // Clear existing content
+    // In our architecture, this.component element IS the grid container.
+    // If inner markup already includes `.products-grid`, use it; otherwise, render directly.
+    const grid = this.element.querySelector('.products-grid') || this.element;
+
+    // Clear existing content inside grid (but keep the grid element itself)
     grid.innerHTML = '';
 
-    // Create product cards
-    this.productCards = this.props.products.map((product, index) => {
+    this.productCards = products.map((product, index) => {
       const cardElement = this.createProductCardElement(product, index);
       grid.appendChild(cardElement);
 
-      // Create and mount component
-      const card = new (componentRegistry.get('ProductCard'))(product);
-      card.mount(cardElement.querySelector('.product-card-wrapper'));
-
-      // Register for progressive hydration
-      hydrator.observe(cardElement);
-
-      return card;
+      // Progressive-enhancement: hydrate nested ProductCard via data-component
+      // (ProgressiveHydrator will pick it up), no manual registry usage here.
+      return cardElement;
     });
 
-    // Animate cards in
+    // Animate cards in with Anime.js helper (stagger, subtle)
     this.animateProductCards();
+
+    // Emit event for any observers (e.g., infinite scroll, metrics)
+    eventBus.emit('products:loaded', { count: products.length });
   }
 
   createProductCardElement(product, index) {
