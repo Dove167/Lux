@@ -15,14 +15,22 @@
   <nav class="navbar" data-component="LuxNav" data-props='{"active":"components"}'>
     <div class="nav-container">
       <a href="/" class="nav-brand">LUX</a>
-      <div class="nav-links">
+      <div class="nav-center">
         <a href="/" class="nav-link">Storefront</a>
         <a href="/components" class="nav-link nav-link-active">Components</a>
         <a href="/admin" class="nav-link">Admin</a>
       </div>
-      <div class="nav-cart" id="navCart">
-        <span class="cart-icon">🛒</span>
-        <span class="cart-count" id="cartCount">0</span>
+      <div class="nav-right">
+        <button
+          class="nav-link nav-cta"
+          data-component="LuxButton"
+          data-props='{"variant":"outline","size":"sm","label":"Contact"}'>
+          Contact
+        </button>
+        <div class="nav-cart" id="navCart">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
       </div>
     </div>
   </nav>
@@ -129,14 +137,152 @@
       </div>
     </section>
 
-    <!-- More primitives placeholder (Tabs, Dialog, etc.) -->
-    <section class="components-section" id="coming-soon">
+    <!-- LuxDialog Demo -->
+    <section class="components-section" id="dialog">
       <div class="components-section-header">
-        <h2>More Lux Primitives</h2>
-        <p>
-          Upcoming: LuxDialog, LuxTabs, LuxDropdown, LuxTable, LuxSkeleton.
-          All follow the same pattern: SSR markup + optional JS via <code>data-component</code>.
-        </p>
+        <h2>LuxDialog</h2>
+        <p>Accessible modal dialog with Lux styling, SSR-safe and data-driven.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <button
+            class="lux-btn"
+            id="openLuxDialogDemo">
+            Open Dialog
+          </button>
+          <div
+            data-component="LuxDialog"
+            data-props='{
+              "triggerId":"openLuxDialogDemo",
+              "title":"Book a Private Lux Fitting",
+              "body":"Schedule a 1:1 virtual fitting with a Lux stylist. Experience the full collection with guided recommendations."
+            }'>
+          </div>
+        </div>
+        <div class="components-code">
+          <div data-component="LuxDialog"
+               data-props='{"triggerId":"openLuxDialogDemo","title":"Title","body":"Content"}'></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LuxTabs Demo -->
+    <section class="components-section" id="tabs">
+      <div class="components-section-header">
+        <h2>LuxTabs</h2>
+        <p>Switch between content panels for specs, details, and policies.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <div data-component="LuxTabs" data-props='{"active":"details"}' class="lux-tabs">
+            <div class="lux-tabs-list">
+              <button data-tab="details">Details</button>
+              <button data-tab="specs">Specs</button>
+              <button data-tab="care">Care</button>
+            </div>
+            <div data-panel="details">Featherweight titanium frame with gradient lenses.</div>
+            <div data-panel="specs">52mm lens · 18mm bridge · 145mm temple · UV400.</div>
+            <div data-panel="care">Use microfiber cloth. Store in Lux case when not in use.</div>
+          </div>
+        </div>
+        <div class="components-code">
+          <div data-component="LuxTabs">
+            <div class="lux-tabs-list">...</div>
+            <div data-panel="details">...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LuxDropdown Demo -->
+    <section class="components-section" id="dropdown">
+      <div class="components-section-header">
+        <h2>LuxDropdown</h2>
+        <p>Minimal dropdown menu for quick actions and filters.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <div data-component="LuxDropdown" class="lux-dropdown">
+            <button class="lux-btn lux-btn-sm" data-dropdown-trigger>
+              Lens Options
+            </button>
+            <div class="lux-dropdown-menu">
+              <a href="#">Polarized</a>
+              <a href="#">Photochromic</a>
+              <a href="#">Blue Light</a>
+            </div>
+          </div>
+        </div>
+        <div class="components-code">
+          <div data-component="LuxDropdown" class="lux-dropdown">
+            <button data-dropdown-trigger>Menu</button>
+            <div class="lux-dropdown-menu">...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LuxTable Demo -->
+    <section class="components-section" id="table">
+      <div class="components-section-header">
+        <h2>LuxTable</h2>
+        <p>Sortable comparison table for frames or orders.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <table data-component="LuxTable" class="lux-table">
+            <thead>
+              <tr>
+                <th data-sort-key="model">Model</th>
+                <th data-sort-key="price">Price</th>
+                <th data-sort-key="lens">Lens</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Aurora Frame</td>
+                <td>289</td>
+                <td>Polarized</td>
+              </tr>
+              <tr>
+                <td>Midnight Pilot</td>
+                <td>249</td>
+                <td>Photochromic</td>
+              </tr>
+              <tr>
+                <td>Solaris Edge</td>
+                <td>199</td>
+                <td>UV400</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="components-code">
+          <table data-component="LuxTable">
+            <th data-sort-key="price">Price</th>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- LuxSkeleton Demo -->
+    <section class="components-section" id="skeleton">
+      <div class="components-section-header">
+        <h2>LuxSkeleton</h2>
+        <p>Elegant skeleton loaders for async content.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <div
+            data-component="LuxSkeleton"
+            class="lux-skeleton"
+            data-props='{"lines":4}'>
+          </div>
+        </div>
+        <div class="components-code">
+          <div data-component="LuxSkeleton" class="lux-skeleton"
+               data-props='{"lines":3}'></div>
+        </div>
       </div>
     </section>
   </main>
@@ -178,8 +324,18 @@
     import CartModal from '/js/components/CartModal.js';
     import ProductGrid from '/js/components/ProductGrid.js';
 
-    // New visual primitives (from single LuxPrimitives module)
-    import { LuxButton, LuxCard, LuxToast, LuxNav } from '/js/components/LuxPrimitives.js';
+    // New visual primitives (from LuxPrimitives)
+    import {
+      LuxButton,
+      LuxCard,
+      LuxToast,
+      LuxNav,
+      LuxDialog,
+      LuxTabs,
+      LuxDropdown,
+      LuxTable,
+      LuxSkeleton
+    } from '/js/components/LuxPrimitives.js';
 
     // Register existing components (for consistency / reuse)
     componentRegistry.register('Hero', Hero);
@@ -192,6 +348,11 @@
     componentRegistry.register('LuxCard', LuxCard);
     componentRegistry.register('LuxToast', LuxToast);
     componentRegistry.register('LuxNav', LuxNav);
+    componentRegistry.register('LuxDialog', LuxDialog);
+    componentRegistry.register('LuxTabs', LuxTabs);
+    componentRegistry.register('LuxDropdown', LuxDropdown);
+    componentRegistry.register('LuxTable', LuxTable);
+    componentRegistry.register('LuxSkeleton', LuxSkeleton);
 
     // Initialize hydrator after all components are registered
     hydrator.init();

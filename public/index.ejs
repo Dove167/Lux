@@ -12,12 +12,30 @@
 </head>
 <body>
   <!-- Navigation -->
-  <nav class="navbar">
+  <nav
+    class="navbar"
+    data-component="LuxNav"
+    data-props='{"active":"storefront"}'>
     <div class="nav-container">
-      <h1 class="nav-brand">LUX</h1>
-      <div class="nav-cart" id="navCart">
-        <span class="cart-icon">🛒</span>
-        <span class="cart-count" id="cartCount">0</span>
+      <div class="nav-left">
+        <a href="/" class="nav-brand">LUX</a>
+      </div>
+      <div class="nav-center">
+        <a href="/" class="nav-link">Storefront</a>
+        <a href="/components" class="nav-link">Components</a>
+        <a href="/admin" class="nav-link">Admin</a>
+      </div>
+      <div class="nav-right">
+        <button
+          class="nav-link nav-cta"
+          data-component="LuxButton"
+          data-props='{"variant":"outline","size":"sm","label":"Contact"}'>
+          Contact
+        </button>
+        <div class="nav-cart" id="navCart">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
       </div>
     </div>
   </nav>
@@ -79,14 +97,21 @@
     import ProductCard from '/js/components/ProductCard.js';
     import CartModal from '/js/components/CartModal.js';
     import ProductGrid from '/js/components/ProductGrid.js';
+    import LuxPrimitives, { LuxNav, LuxButton, LuxCard, LuxToast } from '/js/components/LuxPrimitives.js';
 
-    // Register components with the registry
+    // Register core components
     componentRegistry.register('Hero', Hero);
     componentRegistry.register('ProductCard', ProductCard);
     componentRegistry.register('CartModal', CartModal);
     componentRegistry.register('ProductGrid', ProductGrid);
 
-    // Initialize hydrator (will trigger component onMounted hooks)
+    // Register Lux primitives
+    componentRegistry.register('LuxNav', LuxNav || LuxPrimitives.LuxNav);
+    componentRegistry.register('LuxButton', LuxButton || LuxPrimitives.LuxButton);
+    componentRegistry.register('LuxCard', LuxCard || LuxPrimitives.LuxCard);
+    componentRegistry.register('LuxToast', LuxToast || LuxPrimitives.LuxToast);
+
+    // Initialize hydrator
     hydrator.init();
 
     window.addEventListener('load', () => {

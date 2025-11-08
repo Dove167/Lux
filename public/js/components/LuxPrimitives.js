@@ -1,9 +1,11 @@
-// LuxPrimitives.js
-// Pure Lux implementations for LuxNav, LuxButton, LuxCard, LuxToast
-// All extend BaseComponent and are wired via data-component + ComponentRegistry.
+ // LuxPrimitives.js
+ // Pure Lux implementations for core Lux primitives:
+ // - LuxNav, LuxButton, LuxCard, LuxToast
+ // - LuxDialog, LuxTabs, LuxDropdown, LuxTable, LuxSkeleton
+ // All extend BaseComponent and are wired via data-component + ComponentRegistry.
 
-import { BaseComponent } from '/js/utils/BaseComponent.js';
-import { eventBus } from '/js/utils/EventBus.js';
+ import { BaseComponent } from '/js/utils/BaseComponent.js';
+ import { eventBus } from '/js/utils/EventBus.js';
 
 /**
  * LuxNav
@@ -260,9 +262,257 @@ export class LuxToast extends BaseComponent {
   }
 }
 
+/**
+ * LuxDialog
+ * - SSR-friendly modal dialog.
+ * - Usage:
+ *   <div data-component="LuxDialog"
+ *        data-props='{"triggerId":"openLuxDialog","title":"Lux Dialog","body":"Content"}'></div>
+ *   <button id="openLuxDialog">Open</button>
+ */
+export class LuxDialog extends BaseComponent {
+  onMounted() {
+    const { triggerId, title = 'Lux Dialog', body = '' } = this.props || {};
+    this.isOpen = false;
+
+    this.overlay = document.createElement('div');
+    this.overlay.className = 'lux-dialog-overlay';
+
+    this.content = document.createElement('div');
+    this.content.className = 'lux-dialog';
+
+    this.content.innerHTML = `
+      <div class="lux-dialog-header">
+        <h3 class="lux-dialog-title">${title}</h3>
+        <button class="lux-dialog-close">&times;</button>
+      </div>
+      <div class="lux-dialog-body">${body}</div>
+      <div class="lux-dialog-footer">
+        <button class="lux-btn lux-btn-sm lux-dialog-close-btn">Close</button>
+      </div>
+    `;
+
+    this.overlay.appendChild(this.content);
+    document.body.appendChild(this.overlay);
+
+    const open = () => this.open();
+    const trigger = triggerId ? document.getElementById(triggerId) : null;
+    if (trigger) trigger.addEventListener('click', open);
+    this._openHandler = open;
+
+    const closeButtons = this.content.querySelectorAll('.lux-dialog-close, .lux-dialog-close-btn');
+    closeButtons.forEach((btn) =>
+      btn.addEventListener('click', () => this.close())
+    );
+    this.overlay.addEventListener('click', (e) => {
+      if (e.target === this.overlay) this.close();
+    });
+  }
+
+  open() {
+    if (this.isOpen) return;
+    this.isOpen = true;
+    this.overlay.classList.add('lux-dialog-open');
+  }
+
+  close() {
+    if (!this.isOpen) return;
+    this.isOpen = false;
+    this.overlay.classList.remove('lux-dialog-open');
+  }
+
+  onBeforeUnmount() {
+    if (this.overlay?.parentNode) {
+      this.overlay.parentNode.removeChild(this.overlay);
+    }
+  }
+}
+
+/**
+ * LuxTabs
+ * - Minimal tabs system.
+ * - Markup:
+ *   <div data-component="LuxTabs">
+ *     <div class="lux-tabs-list">
+ *       <button data-tab="details">Details</button>
+ *       <button data-tab="specs">Specs</button>
+ *     </div>
+ *     <div class="lux-tabs-panel" data-panel="details">...</div>
+ *     <div class="lux-tabs-panel" data-panel="specs">...</div>
+ *   </div>
+ */
+export class LuxTabs extends BaseComponent {
+  onMounted() {
+    const root = this.element;
+    this.active = this.props?.active || null;
+
+    this.triggers = Array.from(
+      root.querySelectorAll('[data-tab]')
+    );
+    this.panels = Array.from(
+      root.querySelectorAll('[data-panel]')
+    );
+
+    if (!this.active && this.triggers.length) {
+      this.active = this.triggers[0].dataset.tab;
+    }
+
+    this.triggers.forEach((btn) => {
+      btn.classList.add('lux-tabs-trigger');
+      btn.addEventListener('click', () =>
+        this.setActive(btn.dataset.tab)
+      );
+    });
+
+    this.panels.forEach((panel) =>
+      panel.classList.add('lux-tabs-panel')
+    );
+
+    this.setActive(this.active);
+  }
+
+  setActive(id) {
+    if (!id) return;
+    this.active = id;
+
+    this.triggers.forEach((btn) => {
+      const isActive = btn.dataset.tab === id;
+      btn.classList.toggle('lux-tabs-trigger-active', isActive);
+    });
+
+    this.panels.forEach((panel) => {
+      const isActive = panel.dataset.panel === id;
+      panel.classList.toggle('lux-tabs-panel-active', isActive);
+    });
+  }
+}
+
+/**
+ * LuxDropdown
+ * - Simple anchored dropdown.
+ * - Markup:
+ *   <div data-component="LuxDropdown" class="lux-dropdown">
+ *     <button class="lux-btn-sm" data-dropdown-trigger>Menu</button>
+ *     <div class="lux-dropdown-menu">
+ *       <a href="#">Item</a>
+ *     </div>
+ *   </div>
+ */
+export class LuxDropdown extends BaseComponent {
+  onMounted() {
+    const trigger = this.element.querySelector('[data-dropdown-trigger]');
+    const menu = this.element.querySelector('.lux-dropdown-menu');
+    if (!trigger || !menu) return;
+
+    const toggle = () => {
+      menu.classList.toggle('lux-dropdown-open');
+    };
+    const close = (e) => {
+      if (!this.element.contains(e.target)) {
+        menu.classList.remove('lux-dropdown-open');
+      }
+    };
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggle();
+    });
+    document.addEventListener('click', close);
+
+    this._cleanup = () => {
+      document.removeEventListener('click', close);
+    };
+  }
+
+  onBeforeUnmount() {
+    if (this._cleanup) this._cleanup();
+  }
+}
+
+/**
+ * LuxTable
+ * - Sortable, minimal table.
+ * - Markup:
+ *   <table data-component="LuxTable">
+ *     <thead>
+ *       <tr>
+ *         <th data-sort-key="name">Name</th>
+ *       </tr>
+ *     </thead>
+ *     <tbody>...</tbody>
+ *   </table>
+ */
+export class LuxTable extends BaseComponent {
+  onMounted() {
+    this.tbody = this.element.querySelector('tbody');
+    if (!this.tbody) return;
+
+    this.rows = Array.from(this.tbody.querySelectorAll('tr'));
+    const headers = this.element.querySelectorAll('th[data-sort-key]');
+    headers.forEach((th) => {
+      th.classList.add('lux-table-sortable');
+      th.addEventListener('click', () =>
+        this.sortBy(th.dataset.sortKey, th)
+      );
+    });
+  }
+
+  sortBy(key, headerEl) {
+    if (!key || !this.rows.length) return;
+    const idx = Array.from(headerEl.parentNode.children).indexOf(headerEl);
+    const dir =
+      headerEl.dataset.sortDir === 'asc' ? 'desc' : 'asc';
+    headerEl.dataset.sortDir = dir;
+
+    this.rows.sort((a, b) => {
+      const av = a.children[idx].textContent.trim();
+      const bv = b.children[idx].textContent.trim();
+      if (!isNaN(parseFloat(av)) && !isNaN(parseFloat(bv))) {
+        return dir === 'asc'
+          ? parseFloat(av) - parseFloat(bv)
+          : parseFloat(bv) - parseFloat(av);
+      }
+      return dir === 'asc'
+        ? av.localeCompare(bv)
+        : bv.localeCompare(av);
+    });
+
+    this.tbody.innerHTML = '';
+    this.rows.forEach((r) => this.tbody.appendChild(r));
+  }
+}
+
+/**
+ * LuxSkeleton
+ * - Shimmer placeholder wrapper.
+ * - Markup:
+ *   <div data-component="LuxSkeleton" class="lux-skeleton" data-props='{"lines":3}'></div>
+ */
+export class LuxSkeleton extends BaseComponent {
+  onMounted() {
+    const { lines = 3 } = this.props || {};
+    const count = Math.max(1, Math.min(parseInt(lines, 10) || 3, 8));
+    this.element.classList.add('lux-skeleton');
+    this.element.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      const line = document.createElement('div');
+      line.className = 'lux-skeleton-line';
+      if (i === count - 1) {
+        line.classList.add('lux-skeleton-line-short');
+      }
+      this.element.appendChild(line);
+    }
+  }
+}
+
 export default {
   LuxNav,
   LuxButton,
   LuxCard,
-  LuxToast
+  LuxToast,
+  LuxDialog,
+  LuxTabs,
+  LuxDropdown,
+  LuxTable,
+  LuxSkeleton
 };

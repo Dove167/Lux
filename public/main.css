@@ -9,6 +9,13 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Lux Global Reset / Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
@@ -33,32 +40,130 @@ body {
 .nav-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 14px 28px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  height: 70px;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Lux nav layout sections */
+.nav-left,
+.nav-center,
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.nav-left {
+  flex: 0 0 auto;
+}
+
+.nav-center {
+  flex: 1 1 auto;
+  justify-content: center;
+  gap: 24px;
+}
+
+.nav-right {
+  flex: 0 0 auto;
+  gap: 18px;
 }
 
 .nav-brand {
-  font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: #1a1a1a;
+  font-size: 22px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.16);
+  box-shadow: 0 8px 26px rgba(15, 23, 42, 0.12);
+  background: linear-gradient(135deg, #ffffff, #f1f5f9);
+  color: #020817;
+  text-decoration: none;
 }
 
-.nav-cart {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+/* Nav links */
+
+.nav-link {
+  position: relative;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #6b7280;
+  padding: 6px 0;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #111827;
+  opacity: 0.96;
+}
+
+.nav-link-active {
+  color: #111827;
+}
+
+.nav-link-active::after,
+.nav-link:hover::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  bottom: -6px;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #22c55e);
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.45);
+}
+
+/* Contact pill (LuxButton in nav) */
+
+.nav-cta.lux-btn,
+.nav-cta {
+  border-radius: 999px;
+  padding: 8px 18px;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  background: radial-gradient(circle at top left, #ffffff, #f9fafb);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #111827;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.10);
+  transition: all 0.18s ease-out;
+}
+
+.nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+}
+
+/* Cart */
+
+.nav-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.02);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .nav-cart:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(15, 23, 42, 0.06);
+  transform: translateY(-1px);
 }
 
 .cart-icon {
@@ -66,21 +171,23 @@ body {
 }
 
 .cart-count {
-  background: #1a1a1a;
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 600;
+  background: #111827;
+  color: #ffffff;
 }
 
 /* Hero Section - clean luxury */
 .hero-section {
-  height: 100vh;
+  padding-top: 80px; /* account for fixed nav height */
+  min-height: 100vh;
   position: relative;
   display: flex;
   align-items: center;
@@ -607,16 +714,17 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1.4rem;
+  padding: 10px 22px;
   border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  border: 1px solid #111827;
-  background: #111827;
+  border: none;
+  background: #020817;
   color: #f9fafb;
   cursor: pointer;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.26);
   transition: all 0.2s ease-out;
 }
 
@@ -656,16 +764,18 @@ button[data-props*='"variant":"ghost"']:hover,
   color: #111827;
 }
 
-/* Lux Card demo */
+/* Lux Card */
 
 .lux-card {
   min-width: 260px;
   max-width: 340px;
-  padding: 16px 16px 14px;
-  border-radius: 18px;
-  background: linear-gradient(to bottom, #ffffff, #f9fafb);
-  border: 1px solid rgba(148, 163, 253, 0.45);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+  padding: 2px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top left, rgba(129, 140, 248, 0.4), transparent),
+    radial-gradient(circle at top right, rgba(236, 72, 153, 0.26), transparent),
+    radial-gradient(circle at bottom, rgba(14, 165, 233, 0.2), transparent);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
   position: relative;
 }
 
@@ -705,13 +815,240 @@ button[data-props*='"variant":"ghost"']:hover,
   font-size: 0.7rem;
 }
 
-/* Lux Toast demo root */
+/* Lux Dialog */
 
-#lux-toast-root {
+.lux-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(15,23,42,0.16), rgba(15,23,42,0.78));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.22s ease-out;
+  z-index: 2600;
+}
+
+.lux-dialog-overlay.lux-dialog-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lux-dialog {
+  width: min(420px, 92vw);
+  border-radius: 22px;
+  padding: 18px 18px 14px;
+  background: radial-gradient(circle at top left, #111827, #020817);
+  color: #e5e7eb;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.65);
+  border: 1px solid rgba(148,163,253,0.32);
+}
+
+.lux-dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.lux-dialog-title {
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lux-dialog-close {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.lux-dialog-body {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-bottom: 10px;
+}
+
+.lux-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Lux Tabs */
+
+.lux-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lux-tabs-list {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(15,23,42,0.04);
+  gap: 4px;
+}
+
+.lux-tabs-trigger {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: all 0.18s ease-out;
+}
+
+.lux-tabs-trigger-active {
+  background: #111827;
+  color: #f9fafb;
+  box-shadow: 0 10px 26px rgba(15,23,42,0.4);
+}
+
+.lux-tabs-panel {
+  display: none;
+  font-size: 0.8rem;
+  color: #4b5563;
+}
+
+.lux-tabs-panel-active {
+  display: block;
+}
+
+/* Lux Dropdown */
+
+.lux-dropdown {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.lux-dropdown-menu {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  min-width: 160px;
+  padding: 8px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 18px 50px rgba(15,23,42,0.18);
+  border: 1px solid rgba(229,231,235,1);
+  display: none;
+  z-index: 2200;
+}
+
+.lux-dropdown-menu a {
+  display: block;
+  padding: 6px 8px;
+  font-size: 0.78rem;
+  color: #374151;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.lux-dropdown-menu a:hover {
+  background: rgba(79,70,229,0.06);
+  color: #111827;
+}
+
+.lux-dropdown-open {
+  display: block;
+}
+
+/* Lux Table */
+
+.lux-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(15,23,42,0.12);
+}
+
+.lux-table th,
+.lux-table td {
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.lux-table thead {
+  background: linear-gradient(to right, #111827, #1f2937);
+  color: #e5e7eb;
+}
+
+.lux-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.lux-table-sortable {
+  cursor: pointer;
+  position: relative;
+}
+
+.lux-table-sortable::after {
+  content: '↕';
+  font-size: 0.55rem;
+  margin-left: 4px;
+  opacity: 0.5;
+}
+
+/* Lux Skeleton */
+
+.lux-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lux-skeleton-line {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 0%,
+    #f3f4ff 40%,
+    #e5e7eb 80%
+  );
+  background-size: 200% 100%;
+  animation: lux-skeleton-shimmer 1.2s infinite;
+}
+
+.lux-skeleton-line-short {
+  width: 60%;
+}
+
+@keyframes lux-skeleton-shimmer {
+  0% {
+    background-position: -40% 0;
+  }
+  100% {
+    background-position: 140% 0;
+  }
+}
+
+/* Lux Toast root */
+
+#lux-toast-root,
+.lux-toast-root {
   position: fixed;
   right: 24px;
   bottom: 24px;
   z-index: 2500;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   pointer-events: none;
 }
 
