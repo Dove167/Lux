@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lux Components — Visual Catalog</title>
+  <meta name="description" content="Visual catalog of Lux UI components built with Pure Lux: BaseComponent, data-component, progressive hydration, and luxury styling.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+  <!-- LuxNav using existing navbar styles -->
+  <nav class="navbar" data-component="LuxNav" data-props='{"active":"components"}'>
+    <div class="nav-container">
+      <a href="/" class="nav-brand">LUX</a>
+      <div class="nav-center">
+        <a href="/" class="nav-link">Storefront</a>
+        <a href="/components" class="nav-link nav-link-active">Components</a>
+        <a href="/admin" class="nav-link">Admin</a>
+      </div>
+      <div class="nav-right">
+        <button
+          class="nav-link nav-cta"
+          data-component="LuxButton"
+          data-props='{"variant":"outline","size":"sm","label":"Contact"}'>
+          Contact
+        </button>
+        <div class="nav-cart" id="navCart">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="components-page">
+    <section class="components-hero">
+      <div class="components-hero-inner">
+        <h1 class="components-title">Lux Components</h1>
+        <p class="components-subtitle">
+          Pure Lux primitives built on HTML, CSS, and a tiny runtime.
+          Each block is SSR-first, enhanced via <code>data-component</code> + <code>BaseComponent</code>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Buttons -->
+    <section class="components-section" id="buttons">
+      <div class="components-section-header">
+        <h2>LuxButton</h2>
+        <p>High-end buttons for CTAs, actions, and commerce flows.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <button
+            class="lux-btn"
+            data-component="LuxButton"
+            data-props='{"variant":"primary","label":"Primary","size":"md"}'>
+            Primary
+          </button>
+          <button
+            class="lux-btn"
+            data-component="LuxButton"
+            data-props='{"variant":"outline","label":"Outline","size":"md"}'>
+            Outline
+          </button>
+          <button
+            class="lux-btn"
+            data-component="LuxButton"
+            data-props='{"variant":"ghost","label":"Ghost","size":"sm"}'>
+            Ghost
+          </button>
+        </div>
+        <div class="components-code">
+          <button data-component="LuxButton"
+                  data-props='{"variant":"primary","label":"Primary","size":"md"}'>
+            Primary
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Card -->
+    <section class="components-section" id="cards">
+      <div class="components-section-header">
+        <h2>LuxCard</h2>
+        <p>Composable surface for content, product highlights, and stats.</p>
+      </div>
+      <div class="components-grid">
+        <div
+          class="lux-card"
+          data-component="LuxCard"
+          data-props='{
+            "title":"Aurora Frame",
+            "subtitle":"24k Gold Rim",
+            "body":"Ultra-light titanium with polarized lenses.",
+            "tag":"Featured"
+          }'>
+          <div class="lux-card-inner">
+            <div class="lux-card-tag">Featured</div>
+            <h3 class="lux-card-title">Aurora Frame</h3>
+            <p class="lux-card-body">Ultra-light titanium with polarized lenses.</p>
+            <button class="lux-btn lux-btn-sm">View details</button>
+          </div>
+        </div>
+        <div class="components-code">
+          <div data-component="LuxCard"
+               data-props='{"title":"Aurora Frame","subtitle":"24k Gold Rim","body":"Ultra-light titanium."}'>...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toast -->
+    <section class="components-section" id="toast">
+      <div class="components-section-header">
+        <h2>LuxToast</h2>
+        <p>Corner toasts driven by EventBus. Any component can emit.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <div
+            id="lux-toast-root"
+            data-component="LuxToast">
+          </div>
+          <button
+            class="lux-btn"
+            id="demoToastBtn">
+            Trigger Toast
+          </button>
+        </div>
+        <div class="components-code">
+          // Emit from any component:
+          eventBus.emit('toast', { type: 'success', message: 'Added to cart' });
+        </div>
+      </div>
+    </section>
+
+    <!-- LuxDialog Demo -->
+    <section class="components-section" id="dialog">
+      <div class="components-section-header">
+        <h2>LuxDialog</h2>
+        <p>Accessible modal dialog with Lux styling, SSR-safe and data-driven.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <button
+            class="lux-btn"
+            id="openLuxDialogDemo">
+            Open Dialog
+          </button>
+          <div
+            data-component="LuxDialog"
+            data-props='{
+              "triggerId":"openLuxDialogDemo",
+              "title":"Book a Private Lux Fitting",
+              "body":"Schedule a 1:1 virtual fitting with a Lux stylist. Experience the full collection with guided recommendations."
+            }'>
+          </div>
+        </div>
+        <div class="components-code">
+          <div data-component="LuxDialog"
+               data-props='{"triggerId":"openLuxDialogDemo","title":"Title","body":"Content"}'></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LuxTabs Demo -->
+    <section class="components-section" id="tabs">
+      <div class="components-section-header">
+        <h2>LuxTabs</h2>
+        <p>Switch between content panels for specs, details, and policies.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <div data-component="LuxTabs" data-props='{"active":"details"}' class="lux-tabs">
+            <div class="lux-tabs-list">
+              <button data-tab="details">Details</button>
+              <button data-tab="specs">Specs</button>
+              <button data-tab="care">Care</button>
+            </div>
+            <div data-panel="details">Featherweight titanium frame with gradient lenses.</div>
+            <div data-panel="specs">52mm lens · 18mm bridge · 145mm temple · UV400.</div>
+            <div data-panel="care">Use microfiber cloth. Store in Lux case when not in use.</div>
+          </div>
+        </div>
+        <div class="components-code">
+          <div data-component="LuxTabs">
+            <div class="lux-tabs-list">...</div>
+            <div data-panel="details">...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LuxDropdown Demo -->
+    <section class="components-section" id="dropdown">
+      <div class="components-section-header">
+        <h2>LuxDropdown</h2>
+        <p>Minimal dropdown menu for quick actions and filters.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <div data-component="LuxDropdown" class="lux-dropdown">
+            <button class="lux-btn lux-btn-sm" data-dropdown-trigger>
+              Lens Options
+            </button>
+            <div class="lux-dropdown-menu">
+              <a href="#">Polarized</a>
+              <a href="#">Photochromic</a>
+              <a href="#">Blue Light</a>
+            </div>
+          </div>
+        </div>
+        <div class="components-code">
+          <div data-component="LuxDropdown" class="lux-dropdown">
+            <button data-dropdown-trigger>Menu</button>
+            <div class="lux-dropdown-menu">...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LuxTable Demo -->
+    <section class="components-section" id="table">
+      <div class="components-section-header">
+        <h2>LuxTable</h2>
+        <p>Sortable comparison table for frames or orders.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <table data-component="LuxTable" class="lux-table">
+            <thead>
+              <tr>
+                <th data-sort-key="model">Model</th>
+                <th data-sort-key="price">Price</th>
+                <th data-sort-key="lens">Lens</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Aurora Frame</td>
+                <td>289</td>
+                <td>Polarized</td>
+              </tr>
+              <tr>
+                <td>Midnight Pilot</td>
+                <td>249</td>
+                <td>Photochromic</td>
+              </tr>
+              <tr>
+                <td>Solaris Edge</td>
+                <td>199</td>
+                <td>UV400</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="components-code">
+          <table data-component="LuxTable">
+            <th data-sort-key="price">Price</th>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- LuxSkeleton Demo -->
+    <section class="components-section" id="skeleton">
+      <div class="components-section-header">
+        <h2>LuxSkeleton</h2>
+        <p>Elegant skeleton loaders for async content.</p>
+      </div>
+      <div class="components-grid">
+        <div class="components-demo">
+          <div
+            data-component="LuxSkeleton"
+            class="lux-skeleton"
+            data-props='{"lines":4}'>
+          </div>
+        </div>
+        <div class="components-code">
+          <div data-component="LuxSkeleton" class="lux-skeleton"
+               data-props='{"lines":3}'></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Shared Cart Modal (reusing existing structure) -->
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-overlay"></div>
+    <div class="cart-content">
+      <div class="cart-header">
+        <h2>Shopping Cart</h2>
+        <button class="cart-close" id="cartClose">&times;</button>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <p class="cart-empty">Your cart is empty</p>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total: $<span id="cartTotal">0.00</span></span>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lenis + Anime.js -->
+  <script src="https://unpkg.com/lenis@1.3.14/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/animejs@3.2.1/lib/anime.min.js"></script>
+
+  <!-- Lux runtime boot for components catalog -->
+  <script type="module">
+    import { componentRegistry } from '/js/utils/ComponentRegistry.js';
+    import { hydrator } from '/js/utils/ProgressiveHydrator.js';
+    import { eventBus } from '/js/utils/EventBus.js';
+    import { cartStore } from '/js/utils/CartStore.js';
+    import { smoothScroll } from '/js/utils/scroll.js';
+
+    import Hero from '/js/components/Hero.js';
+    import ProductCard from '/js/components/ProductCard.js';
+    import CartModal from '/js/components/CartModal.js';
+    import ProductGrid from '/js/components/ProductGrid.js';
+
+    // New visual primitives (from LuxPrimitives)
+    import {
+      LuxButton,
+      LuxCard,
+      LuxToast,
+      LuxNav,
+      LuxDialog,
+      LuxTabs,
+      LuxDropdown,
+      LuxTable,
+      LuxSkeleton
+    } from '/js/components/LuxPrimitives.js';
+
+    // Register existing components (for consistency / reuse)
+    componentRegistry.register('Hero', Hero);
+    componentRegistry.register('ProductCard', ProductCard);
+    componentRegistry.register('CartModal', CartModal);
+    componentRegistry.register('ProductGrid', ProductGrid);
+
+    // Register Lux primitives
+    componentRegistry.register('LuxButton', LuxButton);
+    componentRegistry.register('LuxCard', LuxCard);
+    componentRegistry.register('LuxToast', LuxToast);
+    componentRegistry.register('LuxNav', LuxNav);
+    componentRegistry.register('LuxDialog', LuxDialog);
+    componentRegistry.register('LuxTabs', LuxTabs);
+    componentRegistry.register('LuxDropdown', LuxDropdown);
+    componentRegistry.register('LuxTable', LuxTable);
+    componentRegistry.register('LuxSkeleton', LuxSkeleton);
+
+    // Initialize hydrator after all components are registered
+    hydrator.init();
+    hydrator.hydrateAll(); // Start hydration immediately (before load)
+
+    // Cart modal wiring + demo toast on load only
+    window.addEventListener('load', () => {
+      const cartModal = new CartModal();
+      cartModal.mount(document.body);
+
+      const navCartIcon = document.getElementById('navCart');
+      if (navCartIcon) {
+        navCartIcon.addEventListener('click', () => cartModal.open());
+      }
+
+      const updateCartUI = () => {
+        const cartCount = document.getElementById('cartCount');
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+        if (!cartCount || !cartItems || !cartTotal) return;
+
+        const cart = cartStore.getSummary();
+        cartCount.textContent = cart.itemCount;
+        cartTotal.textContent = cart.total.toFixed(2);
+
+        if (cart.items.length === 0) {
+          cartItems.innerHTML = '<p class="cart-empty">Your cart is empty</p>';
+        } else {
+          cartItems.innerHTML = cart.items.map(item => `
+            <div class="cart-item" data-id="${item.productId}">
+              <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+              <div class="cart-item-info">
+                <h4>${item.name}</h4>
+                <p>$${item.price.toFixed(2)} × ${item.quantity}</p>
+              </div>
+              <button class="cart-item-remove" data-id="${item.productId}">×</button>
+            </div>
+          `).join('');
+
+          cartItems.querySelectorAll('.cart-item-remove').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const productId = parseInt(e.target.dataset.id, 10);
+              if (!Number.isNaN(productId)) {
+                cartStore.removeItem(productId);
+              }
+            });
+          });
+        }
+      };
+
+      updateCartUI();
+      eventBus.on('cart:changed', updateCartUI);
+
+      const demoToastBtn = document.getElementById('demoToastBtn');
+      if (demoToastBtn) {
+        demoToastBtn.addEventListener('click', () => {
+          eventBus.emit('toast', {
+            type: 'success',
+            message: 'LuxToast: Added to cart (demo)'
+          });
+        });
+      }
+
+      if (smoothScroll && typeof smoothScroll.getScrollProgress === 'function') {
+        smoothScroll.getScrollProgress();
+      }
+    });
+  </script>
+</body>
+</html>

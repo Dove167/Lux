@@ -9,29 +9,57 @@ let products = [
     id: 1,
     name: 'Classic Black Aviators',
     price: 149.99,
-    image: '/static/images/classic-black.jpg',
-    description: 'Timeless black aviator sunglasses with UV protection'
+    image: '/images/classic-black-aviator.png',
+    description: 'Timeless black aviator silhouette with UV protection.'
   },
   {
     id: 2,
     name: 'Retro Round Gold',
     price: 129.99,
-    image: '/static/images/retro-round-gold.jpg',
-    description: 'Vintage-inspired round frames in gold'
+    image: '/images/retro-round-gold.png',
+    description: 'Vintage-inspired round frame styling with warm metallic accents.'
   },
   {
     id: 3,
     name: 'Sport Performance Blue',
     price: 189.99,
-    image: '/static/images/sport-performance.jpg',
-    description: 'High-performance sports sunglasses with polarized lenses'
+    image: '/images/sport-perform-lens.png',
+    description: 'Performance-forward wrap design with tinted lenses for active days.'
   },
   {
     id: 4,
-    name: 'Minimalist Square',
+    name: 'Minimalist Square Black',
     price: 99.99,
-    image: '/static/images/minimalist-square.jpg',
-    description: 'Clean, minimalist square frames for everyday wear'
+    image: '/images/minimalist-square-black.png',
+    description: 'Clean, minimalist square frame for a modern everyday look.'
+  },
+  {
+    id: 5,
+    name: 'Tortoise Shell Classic',
+    price: 139.99,
+    image: '/images/tortoise-shell-classic.png',
+    description: 'Rich tortoise shell pattern with a refined, timeless silhouette.'
+  },
+  {
+    id: 6,
+    name: 'Trans Crystal Frame',
+    price: 119.99,
+    image: '/images/trans-crystal-frame.png',
+    description: 'Crystal-clear frame that feels light, modern, and editorial.'
+  },
+  {
+    id: 7,
+    name: 'Gold Rim Aviator Pilot',
+    price: 209.99,
+    image: '/images/gold-rim-aviator-pilot.png',
+    description: 'Polished gold-rim pilot frame that signals premium craftsmanship.'
+  },
+  {
+    id: 8,
+    name: 'Oversized Fashion Frame',
+    price: 159.99,
+    image: '/images/oversized-fashion-frame.png',
+    description: 'Bold oversized lenses for a confident, fashion-forward statement.'
   }
 ];
 
@@ -47,11 +75,18 @@ const app = new Hono();
 //  - /js/utils/ComponentRegistry.js   -> public/js/utils/ComponentRegistry.js
 //  - /js/components/Hero.js           -> public/js/components/Hero.js
 //  - /images/...                      -> public/images/...
-app.use('/*', serveStatic({ root: './public' }));
+app.use('/js/*', serveStatic({ root: './public', cacheControl: 'no-store' })); // Explicitly disable caching for JS
+app.use('/*', serveStatic({ root: './public' })); // General static files
 
 // API Routes
 app.get('/api/products', async (c) => {
   return c.json(products);
+});
+
+ // Components gallery route - renders the visual Lux components catalog
+app.get('/components', async (c) => {
+  const html = await renderTemplate('components', { products });
+  return c.html(html);
 });
 
 app.get('/api/products/:id', async (c) => {

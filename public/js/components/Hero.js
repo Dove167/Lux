@@ -1,6 +1,7 @@
-// Hero component with interactive Canvas 2D lens reflections and particles
+ // Hero component with interactive Canvas 2D lens reflections and particles + clean-luxury animations
 import { BaseComponent } from '../utils/BaseComponent.js';
 import { componentRegistry } from '../utils/ComponentRegistry.js';
+import { smoothScroll, animationManager } from '../utils/scroll.js';
 
 export default class Hero extends BaseComponent {
   constructor(props = {}) {
@@ -22,6 +23,7 @@ export default class Hero extends BaseComponent {
     this.setupParticles();
     this.startAnimation();
     this.setupEventListeners();
+    this.animateEntrance();
   }
 
   onUnmounted() {
@@ -75,14 +77,22 @@ export default class Hero extends BaseComponent {
       }
     });
 
-    // CTA button
+    // CTA button scroll (Lenis first, then native smooth as fallback)
     const ctaBtn = this.element.querySelector('.hero-cta');
     if (ctaBtn) {
-      ctaBtn.addEventListener('click', () => {
-        // Smooth scroll to products section
-        const productsSection = document.getElementById('products');
-        if (productsSection) {
-          productsSection.scrollIntoView({ behavior: 'smooth' });
+      ctaBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetSelector = '#productsGrid';
+        const target = document.querySelector(targetSelector) || document.getElementById('products');
+
+        if (!target) return;
+
+        // Prefer Lenis smoothScroll if available
+        if (smoothScroll && typeof smoothScroll.scrollTo === 'function') {
+          smoothScroll.scrollTo(target, { offset: -40 });
+        } else {
+          // Fallback: native smooth scroll
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
     }
@@ -111,6 +121,30 @@ export default class Hero extends BaseComponent {
     this.canvas = null;
     this.lensEffect = null;
     this.particles = null;
+  }
+
+  // Hero entrance animation (subtle, coordinated)
+  animateEntrance() {
+    if (!animationManager) return;
+
+    const content = this.element.querySelector('.hero-content');
+    const title = this.element.querySelector('.hero-title');
+    const subtitle = this.element.querySelector('.hero-subtitle');
+    const cta = this.element.querySelector('.hero-cta');
+
+    if (content && typeof animationManager.fadeIn === 'function') {
+      animationManager.fadeIn(content, 800, 0);
+    }
+
+    if (title && typeof animationManager.slideIn === 'function') {
+      animationManager.slideIn(title, 'up', 24, 800, 50);
+    }
+    if (subtitle && typeof animationManager.slideIn === 'function') {
+      animationManager.slideIn(subtitle, 'up', 20, 800, 140);
+    }
+    if (cta && typeof animationManager.slideIn === 'function') {
+      animationManager.slideIn(cta, 'up', 18, 800, 230);
+    }
   }
 
   render() {

@@ -14,13 +14,18 @@ export class SmoothScroll {
       infinite: false,
       ...options
     };
-    this.init();
+    // Defer actual init so Lenis script tag has a chance to load.
+    if (document.readyState === 'complete') {
+      this.init();
+    } else {
+      window.addEventListener('load', () => this.init(), { once: true });
+    }
   }
 
   init() {
-    // Check if Lenis is available
+    // Check if Lenis is available (from CDN script)
     if (typeof Lenis === 'undefined') {
-      console.warn('Lenis not found. Make sure to include Lenis script.');
+      // Progressive enhancement: no Lenis → fall back silently to native scroll
       return;
     }
 
@@ -69,7 +74,7 @@ export class SmoothScroll {
   }
 }
 
-// Anime.js animation utilities
+ // Anime.js animation utilities
 export class AnimationManager {
   constructor() {
     this.animations = new Map();
@@ -142,8 +147,8 @@ export class AnimationManager {
     });
   }
 
-  // Hover animation
-  hoverEffect(element, scale = 1.05, duration = 300) {
+  // Hover animation (subtle clean-luxury)
+  hoverEffect(element, scale = 1.03, duration = 220) {
     if (typeof anime === 'undefined') {
       console.warn('Anime.js not found. Make sure to include Anime.js script.');
       return;
@@ -169,6 +174,21 @@ export class AnimationManager {
         duration,
         easing: 'easeOutCubic'
       });
+    });
+  }
+
+  // Micro pulse for actions (e.g. add-to-cart)
+  pulse(element, scale = 1.04, duration = 200) {
+    if (typeof anime === 'undefined') {
+      console.warn('Anime.js not found. Make sure to include Anime.js script.');
+      return;
+    }
+
+    return anime({
+      targets: element,
+      scale: [1, scale, 1],
+      duration,
+      easing: 'easeOutCubic'
     });
   }
 

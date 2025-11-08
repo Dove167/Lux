@@ -12,12 +12,30 @@
 </head>
 <body>
   <!-- Navigation -->
-  <nav class="navbar">
+  <nav
+    class="navbar"
+    data-component="LuxNav"
+    data-props='{"active":"storefront"}'>
     <div class="nav-container">
-      <h1 class="nav-brand">LUX</h1>
-      <div class="nav-cart" id="navCart">
-        <span class="cart-icon">🛒</span>
-        <span class="cart-count" id="cartCount">0</span>
+      <div class="nav-left">
+        <a href="/" class="nav-brand">LUX</a>
+      </div>
+      <div class="nav-center">
+        <a href="/" class="nav-link">Storefront</a>
+        <a href="/components" class="nav-link">Components</a>
+        <a href="/admin" class="nav-link">Admin</a>
+      </div>
+      <div class="nav-right">
+        <button
+          class="nav-link nav-cta"
+          data-component="LuxButton"
+          data-props='{"variant":"outline","size":"sm","label":"Contact"}'>
+          Contact
+        </button>
+        <div class="nav-cart" id="navCart">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
       </div>
     </div>
   </nav>
@@ -62,120 +80,97 @@
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/animejs@3/lib/anime.min.js"></script>
+  <!-- Scripts: Lenis + Anime.js via CDN -->
+  <!-- Use stable lenis 1.3.14 UMD build (global Lenis) -->
+  <script src="https://unpkg.com/lenis@1.3.14/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/animejs@3.2.1/lib/anime.min.js"></script>
 
-  <!-- Core utilities -->
+  <!-- Core runtime boot (ESM) -->
   <script type="module">
     import { componentRegistry } from '/js/utils/ComponentRegistry.js';
     import { hydrator } from '/js/utils/ProgressiveHydrator.js';
     import { eventBus } from '/js/utils/EventBus.js';
     import { cartStore } from '/js/utils/CartStore.js';
-    import { smoothScroll, animationManager } from '/js/utils/scroll.js';
+    import { smoothScroll } from '/js/utils/scroll.js';
 
-    // Register components
     import Hero from '/js/components/Hero.js';
     import ProductCard from '/js/components/ProductCard.js';
     import CartModal from '/js/components/CartModal.js';
     import ProductGrid from '/js/components/ProductGrid.js';
+    import LuxPrimitives, { LuxNav, LuxButton, LuxCard, LuxToast } from '/js/components/LuxPrimitives.js';
 
+    // Register core components
     componentRegistry.register('Hero', Hero);
     componentRegistry.register('ProductCard', ProductCard);
     componentRegistry.register('CartModal', CartModal);
     componentRegistry.register('ProductGrid', ProductGrid);
 
-    // Initialize progressive hydration
+    // Register Lux primitives
+    componentRegistry.register('LuxNav', LuxNav || LuxPrimitives.LuxNav);
+    componentRegistry.register('LuxButton', LuxButton || LuxPrimitives.LuxButton);
+    componentRegistry.register('LuxCard', LuxCard || LuxPrimitives.LuxCard);
+    componentRegistry.register('LuxToast', LuxToast || LuxPrimitives.LuxToast);
+
+    // Initialize hydrator
     hydrator.init();
 
-    // Initialize smooth scroll and animations
     window.addEventListener('load', () => {
-      // Initialize cart UI
-      updateCartUI();
-
-      // Animate hero content
-      const heroContent = document.querySelector('.hero-content');
-      if (heroContent) {
-        animationManager.fadeIn(heroContent, 1000);
-        animationManager.slideIn(heroContent.querySelector('.hero-title'), 'up', 30, 1000, 200);
-        animationManager.slideIn(heroContent.querySelector('.hero-subtitle'), 'up', 30, 1000, 400);
-        animationManager.slideIn(heroContent.querySelector('.hero-cta'), 'up', 30, 1000, 600);
-      }
-
-      // Animate product cards on scroll
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-          if (entry.isIntersecting) {
-            animationManager.slideIn(entry.target, 'up', 50, 800, index * 100);
-            observer.unobserve(entry.target);
-          }
-        });
-      });
-
-      document.querySelectorAll('.product-card').forEach(card => {
-        observer.observe(card);
-      });
-
-      // Cart modal functionality
-      // Initialize CartModal
-      const cartModalElement = document.getElementById('cartModal');
+      // Create and mount CartModal once
       const cartModal = new CartModal();
-      cartModal.mount(document.body); // Mount to body or a specific container
-      
+      cartModal.mount(document.body);
+
       const navCartIcon = document.getElementById('navCart');
       if (navCartIcon) {
-        navCartIcon.addEventListener('click', () => {
-          cartModal.open();
-        });
+        navCartIcon.addEventListener('click', () => cartModal.open());
       }
 
-      // Initialize ProductGrid
-      const productsGridElement = document.getElementById('productsGrid');
-      const productGridProps = productsGridElement.dataset.props ? JSON.parse(productsGridElement.dataset.props) : {};
-      const productGrid = new ProductGrid(productGridProps);
-      productGrid.hydrate(productsGridElement);
+      // Cart UI sync
+      const updateCartUI = () => {
+        const cartCount = document.getElementById('cartCount');
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+        if (!cartCount || !cartItems || !cartTotal) return;
 
-      // Hydrate components progressively
-      hydrator.hydrateAll();
-    });
+        const cart = cartStore.getSummary();
+        cartCount.textContent = cart.itemCount;
+        cartTotal.textContent = cart.total.toFixed(2);
 
-    // Update cart UI
-    function updateCartUI() {
-      const cartCount = document.getElementById('cartCount');
-      const cartItems = document.getElementById('cartItems');
-      const cartTotal = document.getElementById('cartTotal');
-
-      const cart = cartStore.getSummary();
-
-      cartCount.textContent = cart.itemCount;
-      cartTotal.textContent = cart.total.toFixed(2);
-
-      if (cart.items.length === 0) {
-        cartItems.innerHTML = '<p class="cart-empty">Your cart is empty</p>';
-      } else {
-        cartItems.innerHTML = cart.items.map(item => `
-          <div class="cart-item" data-id="${item.productId}">
-            <img src="${item.image}" alt="${item.name}" class="cart-item-image">
-            <div class="cart-item-info">
-              <h4>${item.name}</h4>
-              <p>$${item.price.toFixed(2)} × ${item.quantity}</p>
+        if (cart.items.length === 0) {
+          cartItems.innerHTML = '<p class="cart-empty">Your cart is empty</p>';
+        } else {
+          cartItems.innerHTML = cart.items.map(item => `
+            <div class="cart-item" data-id="${item.productId}">
+              <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+              <div class="cart-item-info">
+                <h4>${item.name}</h4>
+                <p>$${item.price.toFixed(2)} × ${item.quantity}</p>
+              </div>
+              <button class="cart-item-remove" data-id="${item.productId}">×</button>
             </div>
-            <button class="cart-item-remove" data-id="${item.productId}">×</button>
-          </div>
-        `).join('');
+          `).join('');
 
-        // Add remove functionality
-        cartItems.querySelectorAll('.cart-item-remove').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            const productId = parseInt(e.target.dataset.id);
-            cartStore.removeItem(productId);
+          cartItems.querySelectorAll('.cart-item-remove').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const productId = parseInt(e.target.dataset.id, 10);
+              if (!Number.isNaN(productId)) {
+                cartStore.removeItem(productId);
+              }
+            });
           });
-        });
-      }
-    }
+        }
+      };
 
-    // Listen for cart changes
-    eventBus.on('cart:changed', updateCartUI);
+      updateCartUI();
+      eventBus.on('cart:changed', updateCartUI);
+
+      // Hydrate all components progressively (Hero/ProductGrid/ProductCard/CartModal)
+      hydrator.hydrateAll();
+
+      // Touch smoothScroll to ensure Lenis loop is engaged if available; it's no-op safe otherwise.
+      if (smoothScroll && typeof smoothScroll.getScrollProgress === 'function') {
+        smoothScroll.getScrollProgress();
+      }
+    });
   </script>
 </body>
 </html>

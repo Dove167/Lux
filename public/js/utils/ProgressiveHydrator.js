@@ -1,6 +1,9 @@
 // Progressive Hydrator for modular UI system
+import { componentRegistry } from './ComponentRegistry.js'; // Import componentRegistry
+
 export class ProgressiveHydrator {
   constructor() {
+    console.log('ProgressiveHydrator: Initializing (Version 2025-11-08T04:30:00Z)'); // Add version log
     this.observers = [];
     this.isIntersecting = new WeakMap();
     this.hydrationQueue = [];
@@ -46,18 +49,17 @@ export class ProgressiveHydrator {
     if (!componentName) return;
 
     try {
-      // Dynamically import component
-      const module = await import(`../components/${componentName}.js`);
-      const ComponentClass = module.default || module[componentName];
+      // Get the ComponentClass from the registry
+      const ComponentClass = componentRegistry.get(componentName);
 
       if (ComponentClass) {
         const component = new ComponentClass(componentProps);
         component.hydrate(element);
 
-        // Mark as hydrated
         element.dataset.hydrated = 'true';
-
         console.log(`Component "${componentName}" hydrated successfully`);
+      } else {
+        console.warn(`Component "${componentName}" not found in registry. Cannot hydrate.`);
       }
     } catch (error) {
       console.error(`Failed to hydrate component "${componentName}":`, error);
