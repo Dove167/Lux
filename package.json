@@ -6,16 +6,30 @@
   "type": "module",
   "scripts": {
     "start": "bun run server.js",
-    "dev": "bun --hot run server.js",
-    "build": "bun build --target=node server.js --outdir dist",
-    "test": "bun test"
+    "dev": "run-p watch:css dev:vite",
+    "dev:vite": "vite",
+    "watch:css": "postcss ./public/css/input.css -o ./public/main.css --watch",
+    "build": "run-s build:css build:js",
+    "build:css": "postcss ./public/css/input.css -o ./public/main.css --minify",
+    "build:js": "bun build --target=node server.js --outdir dist",
+    "test": "bun test",
+    "cli": "bun run scripts/cli.js"
   },
   "dependencies": {
-    "hono": "^4.0.0",
-    "ejs": "^3.1.9"
+    "commander": "^14.0.2",
+    "ejs": "^3.1.10",
+    "hono": "^4.0.0"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "autoprefixer": "^10.4.22",
+    "bun-types": "latest",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "ps-tree": "^1.2.0",
+    "tailwindcss": "^4.1.17",
+    "vite": "^7.2.2",
+    "vite-plugin-nodemon": "^1.0.0"
   },
   "keywords": ["modular-ui", "component-system", "bun", "hono", "ejs", "javascript"],
   "author": "Your Name",

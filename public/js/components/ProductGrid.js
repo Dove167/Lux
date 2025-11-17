@@ -89,7 +89,8 @@ export default class ProductGrid extends BaseComponent {
 
   createProductCardElement(product, index) {
     const cardWrapper = document.createElement('div');
-    cardWrapper.className = 'product-card-container';
+    // Using Tailwind classes for the container
+    cardWrapper.className = 'group relative overflow-hidden rounded-lg shadow-lg bg-white transform transition-transform duration-300 hover:scale-105';
     cardWrapper.style.animationDelay = `${index * 100}ms`;
     cardWrapper.dataset.productId = product.id;
 
@@ -98,20 +99,19 @@ export default class ProductGrid extends BaseComponent {
            data-component="ProductCard"
            data-props='${JSON.stringify(product)}'>
         <div class="product-card" data-product-id="${product.id}">
-          <div class="product-image-container">
+          <div class="relative">
             <img src="${product.image || '/static/images/placeholder.jpg'}"
                  alt="${product.name}"
-                 class="product-image"
+                 class="w-full h-64 object-cover"
                  loading="lazy">
-            <div class="product-canvas"></div>
-            <div class="product-overlay">
-              <button class="add-to-cart-btn">Add to Cart</button>
+            <div class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <button class="add-to-cart-btn bg-white text-black py-2 px-4 rounded-full font-bold hover:bg-gray-200 transition-colors">Add to Cart</button>
             </div>
           </div>
-          <div class="product-info">
-            <h3 class="product-name">${product.name}</h3>
-            <p class="product-price">$${product.price.toFixed(2)}</p>
-            <p class="product-description">${product.description}</p>
+          <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-800">${product.name}</h3>
+            <p class="text-md font-bold text-gray-900 mt-1">$${product.price.toFixed(2)}</p>
+            <p class="text-sm text-gray-600 mt-2">${product.description}</p>
           </div>
         </div>
       </div>
