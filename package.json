@@ -8,11 +8,13 @@
     "start": "bun run server.js",
     "dev": "bun --hot run server.js",
     "build": "bun build --target=node server.js --outdir dist",
-    "test": "bun test"
+    "test": "bun test",
+    "cli": "bun run scripts/cli.js"
   },
   "dependencies": {
-    "hono": "^4.0.0",
-    "ejs": "^3.1.9"
+    "commander": "^14.0.2",
+    "ejs": "^3.1.10",
+    "hono": "^4.0.0"
   },
   "devDependencies": {
     "bun-types": "latest"
