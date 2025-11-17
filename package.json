@@ -6,16 +6,21 @@
   "type": "module",
   "scripts": {
     "start": "bun run server.js",
-    "dev": "bun --hot run server.js",
+    "dev": "vite",
     "build": "bun build --target=node server.js --outdir dist",
-    "test": "bun test"
+    "test": "bun test",
+    "cli": "bun run scripts/cli.js"
   },
   "dependencies": {
-    "hono": "^4.0.0",
-    "ejs": "^3.1.9"
+    "commander": "^14.0.2",
+    "ejs": "^3.1.10",
+    "hono": "^4.0.0"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "ps-tree": "^1.2.0",
+    "vite": "^7.2.2",
+    "vite-plugin-nodemon": "^1.0.0"
   },
   "keywords": ["modular-ui", "component-system", "bun", "hono", "ejs", "javascript"],
   "author": "Your Name",
